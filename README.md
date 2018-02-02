@@ -1,4 +1,4 @@
-# RigelDev-UI
+# UiRig
 
 ## Why
 
