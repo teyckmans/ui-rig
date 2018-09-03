@@ -354,6 +354,7 @@ class DslButton(val action : () -> Any, vararg cssClasses : String) : DslTagWith
 
 class DslTable(vararg cssClasses : String) : DslTag("table", cssClasses.asList()) {
     fun thead(vararg cssClasses : String, init : DslTableHead.() -> Unit) = initTag(DslTableHead(*cssClasses), init)
+    fun tbody(vararg cssClasses : String, init : DslTableBody.() -> Unit) = initTag(DslTableBody(*cssClasses), init)
 }
 
 class DslTableHead(vararg  cssClasses : String) : DslTag("thead", cssClasses.asList()) {
