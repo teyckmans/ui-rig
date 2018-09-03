@@ -103,6 +103,13 @@ abstract class DslTag(private val name: String,
         // TODO attributes
         return h(name, vNodeData, children.map(DslElement::render).toTypedArray())
     }
+
+    /**
+     * generic attribute method
+     */
+    fun attr(name : String, value: String) {
+        vNodeData.attrs!![name] = value
+    }
 }
 
 class DelegateProperty(val objectLookUp: () -> Any, val propertyName: String? = null){
@@ -166,7 +173,7 @@ abstract class DslTagWithText(name : String, vararg cssClasses : String) : DslTa
     }
 }
 
-abstract class DslBodyTag(name : String, vararg cssClasses : String) : DslTagWithText(name, *cssClasses) {
+open class DslBodyTag(name : String, vararg cssClasses : String) : DslTagWithText(name, *cssClasses) {
     fun div(vararg cssClasses : String, init : DslDiv.() -> Unit) = initTag(DslDiv(*cssClasses), init)
     fun p(vararg cssClasses : String, init : DslParagraph.() -> Unit) = initTag(DslParagraph(*cssClasses), init)
     fun a(href : String, vararg cssClasses : String, init : DslAnchor.() -> Unit) = initTag(DslAnchor(href, *cssClasses), init)
@@ -174,6 +181,7 @@ abstract class DslBodyTag(name : String, vararg cssClasses : String) : DslTagWit
     fun form(vararg cssClasses : String, init : DslForm.() -> Unit) = initTag(DslForm(*cssClasses), init)
     fun nav(vararg cssClasses: String, init : DslNav.() -> Unit) = initTag(DslNav(*cssClasses), init)
     fun footer(vararg cssClasses : String, init : DslFooter.() -> Unit) = initTag(DslFooter(*cssClasses), init)
+    fun table(vararg cssClasses : String, init : DslTable.() -> Unit) = initTag(DslTable(*cssClasses), init)
 
     fun ol(vararg cssClasses : String, init : DslOrderedList.() -> Unit) = initTag(DslOrderedList(*cssClasses), init)
     fun ul(vararg cssClasses : String, init : DslUnOrderedList.() -> Unit) = initTag(DslUnOrderedList(*cssClasses), init)
@@ -188,6 +196,11 @@ abstract class DslBodyTag(name : String, vararg cssClasses : String) : DslTagWit
     fun button(action : () -> Any, vararg cssClasses : String, init : DslButton.() -> Unit) = initTag(DslButton(action, *cssClasses), init)
     fun a(action : () -> Any, vararg cssClasses : String, init : DslAnchorAction.() -> Unit) = initTag(DslAnchorAction(action, *cssClasses), init)
 
+    /**
+     * generic tag method
+     */
+    fun tag(name : String, vararg cssClasses : String, init : DslBodyTag.() -> Unit) = initTag(DslBodyTag(name, *cssClasses), init)
+
     fun append(append : DslBodyTag.() -> Unit) : DslBodyTag {
         this.append()
         return this
@@ -196,6 +209,8 @@ abstract class DslBodyTag(name : String, vararg cssClasses : String) : DslTagWit
     fun append(element : DslElement) {
         this.children.add(element)
     }
+
+
 }
 
 class DslDiv(vararg cssClasses : String) : DslBodyTag("div", *cssClasses)
@@ -213,8 +228,7 @@ class DslLabel(vararg cssClasses : String) : DslTagWithText("label", *cssClasses
 class DslAnchor(private val href: String, vararg cssClasses : String) : DslTagWithText("a", *cssClasses) {
     override fun prepare(appControl: UiAppControl) {
         super.prepare(appControl)
-
-        vNodeData.attrs!!["href"] = href
+        super.attr("href", href)
     }
 }
 
@@ -246,8 +260,7 @@ abstract class DslInputTag(val inputType : String, vararg cssClasses : String) :
 
     override fun prepare(appControl: UiAppControl) {
         super.prepare(appControl)
-
-        vNodeData.attrs!!["type"] = inputType
+        super.attr("type", inputType)
     }
 }
 
@@ -264,7 +277,7 @@ class DslTextField(val action : (value : String) -> Any, vararg cssClasses : Str
     }
 
     fun value(value : String) {
-        vNodeData.attrs!!["value"] = value
+        super.attr("value", value)
     }
 
     fun autoFocus() {
@@ -272,7 +285,7 @@ class DslTextField(val action : (value : String) -> Any, vararg cssClasses : Str
     }
 
     fun autoFocus(autoFocus: Boolean) {
-        vNodeData.attrs!!["autofocus"] = autoFocus
+        super.attr("autofocus", autoFocus.toString())
     }
 
     fun required() {
@@ -280,7 +293,7 @@ class DslTextField(val action : (value : String) -> Any, vararg cssClasses : Str
     }
 
     fun required(required : Boolean) {
-        vNodeData.attrs!!["required"] = required
+        super.attr("required", required.toString())
     }
 
     fun optional() {
@@ -301,7 +314,7 @@ class DslPasswordField(val action : (value : String) -> Any, vararg cssClasses :
     }
 
     fun value(value : String) {
-        vNodeData.attrs!!["value"] = value
+        super.attr("value", value)
     }
 
     fun autoFocus() {
@@ -309,7 +322,7 @@ class DslPasswordField(val action : (value : String) -> Any, vararg cssClasses :
     }
 
     fun autoFocus(autoFocus: Boolean) {
-        vNodeData.attrs!!["autofocus"] = autoFocus
+        super.attr("autofocus", autoFocus.toString())
     }
 
     fun required() {
@@ -317,7 +330,7 @@ class DslPasswordField(val action : (value : String) -> Any, vararg cssClasses :
     }
 
     fun required(required : Boolean) {
-        vNodeData.attrs!!["required"] = required
+        super.attr("required", required.toString())
     }
 
     fun optional() {
@@ -330,7 +343,7 @@ class DslButton(val action : () -> Any, vararg cssClasses : String) : DslTagWith
     override fun prepare(appControl: UiAppControl) {
         super.prepare(appControl)
 
-        vNodeData.attrs!!["type"] = "button"
+        super.attr("type", "button")
 
         vNodeData.on!!.click = {
             appControl.send(action())
@@ -339,6 +352,29 @@ class DslButton(val action : () -> Any, vararg cssClasses : String) : DslTagWith
     }
 }
 
+class DslTable(vararg cssClasses : String) : DslTag("table", cssClasses.asList()) {
+    fun thead(vararg cssClasses : String, init : DslTableHead.() -> Unit) = initTag(DslTableHead(*cssClasses), init)
+}
+
+class DslTableHead(vararg  cssClasses : String) : DslTag("thead", cssClasses.asList()) {
+    fun th(vararg cssClasses : String, init : DslTableHeadCell.() -> Unit) = initTag(DslTableHeadCell(*cssClasses), init)
+}
+
+class DslTableHeadCell(vararg  cssClasses : String) : DslBodyTag("th", *cssClasses) {
+
+}
+
+class DslTableBody(vararg  cssClasses : String) : DslTag("tbody", cssClasses.asList()) {
+    fun tr(vararg cssClasses : String, init : DslTableRow.() -> Unit) = initTag(DslTableRow(*cssClasses), init)
+}
+
+class DslTableRow(vararg  cssClasses : String) : DslTag("tr", cssClasses.asList()) {
+    fun td(vararg cssClasses : String, init : DslTableCell.() -> Unit) = initTag(DslTableCell(*cssClasses), init)
+}
+
+class DslTableCell(vararg  cssClasses : String) : DslBodyTag("td", *cssClasses) {
+
+}
 
 fun div(vararg cssClasses : String, init: DslDiv.() -> Unit) : DslDiv {
     val div = DslDiv(*cssClasses)
