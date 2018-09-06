@@ -39,54 +39,7 @@ Ideally snabbdom would be wrapped by UiRig itself and updated to the latest vers
 The HttpCommand is a very basic wrapper around the XMLHttpRequest.
 
 I'm thinking about creating a DSL to describe HTTP request handling. 
-`
-// shared or common behaviour captured in HttpCommandFactory
 
-val httpCommandFactory = httpCommandFactory(requestTimeOut) {
-  header(name, value) // think of Authorization headers that need to be set for all but the login request
-  
-  options {
-    requestTimeOut = ...
-    ...
-  }
-  
-  error {
-    // message creation logic here>
-  }
-  
-  timeOut {
-    // message creation logic here>
-  }
-}
-
-// request specifics in commands created through get/post/... methods.
-
-val httpCommand = httpCommandFactory.<verb> {
-  header (name, value)
-
-  options {
-    requestTimeOut = ...
-    ...
-  }
-
-  body(bodyValue, kotlinx.serialization serializer - don't care about the type, JSON is not the only wire format)
-  
-  ok {
-    // message creation logic here
-  }
-  
-  ok(kotlinx.serialization serializer - to parse the response with - if the response maps to a message)
-  ok(kotlinx.serialization serializer, {message creator method reference that wraps the parsed response})
-  
-  error {
-    // message creation logic here>
-  }
-  
-  timeOut {
-    // message creation logic here>
-  }
-}
-`
 The above code is just an idea, no promises made here.
 
 ## Why
