@@ -40,6 +40,62 @@ The HttpCommand is a very basic wrapper around the XMLHttpRequest.
 
 I'm thinking about creating a DSL to describe HTTP request handling. 
 
+Shared settings and command behaviour will be captured in an HttpCommandFactory.
+
+```kotlin
+
+val httpCommandFactory = httpCommandFactory {
+  header(name, value) // think of Authorization headers that need to be set for all but the login request
+  
+  options {
+    requestTimeOut = 1000
+    // other options
+  }
+  
+  error {
+    // message creation logic here
+  }
+  
+  timeOut {
+    // message creation logic here
+  }
+}
+
+```
+
+Actual commands are created by using the get/post/... methods that expose a DSL to define request specific settings and behaviour.
+
+```kotlin
+val httpCommand = httpCommandFactory.post {
+  header (name, value)
+
+  options {
+    requestTimeOut = 2000
+    // other options
+  }
+
+  body(bodyValue, serializer)
+  
+  ok {
+    // message creation logic here
+  }
+  
+  ok(serializer) // to just parse the response with - if the response maps to a message
+  ok(serializer) {
+    // message creator method reference that wraps the parsed response
+  }
+  
+  error {
+    // message creation logic here
+  }
+  
+  timeOut {
+    // message creation logic here
+  }
+}
+
+```
+
 The above code is just an idea, no promises made here.
 
 ## Why
