@@ -34,14 +34,12 @@ version = releaseVersion as String
 
 repositories {
     jcenter()
-    maven(url = "https://dl.bintray.com/gbaldeck/kotlin")
 }
 
 dependencies {
     val kotlinVersion = "1.2.21"
 
     compile ("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion")
-    compile ("com.github.snabbdom:snabbdom-kotlin:0.1.1")
 }
 
 tasks {

@@ -1,6 +1,7 @@
 package eu.rigeldev.uirig.core
 
-import com.github.snabbdom.*
+import eu.rigeldev.uirig.snabbdom.*
+import eu.rigeldev.uirig.snabbdom.modules.*
 import eu.rigeldev.uirig.UiRigApplication
 import eu.rigeldev.uirig.update.Update
 import kotlin.browser.document
@@ -12,7 +13,7 @@ import kotlin.browser.window
 class UiAppControl internal constructor(private val app: UiRigApplication) {
 
     private var state: Any? = null
-    private val patch: Patch = Snabbdom.init(
+    private val patch: Patch = init(
             arrayOf(
                     classModule,
                     attributesModule,

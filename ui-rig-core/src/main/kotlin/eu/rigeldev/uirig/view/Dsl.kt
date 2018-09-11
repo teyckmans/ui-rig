@@ -1,6 +1,7 @@
 package eu.rigeldev.uirig.view
 
-import com.github.snabbdom.*
+import eu.rigeldev.uirig.snabbdom.*
+import eu.rigeldev.uirig.snabbdom.modules.*
 import eu.rigeldev.uirig.core.UiAppControl
 import org.w3c.dom.HTMLInputElement
 import kotlin.reflect.KProperty
