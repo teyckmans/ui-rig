@@ -1,4 +1,16 @@
+buildscript {
+    def kotlinVersion = "1.2.61"
+
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+    }
+}
+
 apply plugin: 'groovy'
+apply plugin: 'kotlin'
 
 repositories {
     jcenter()
@@ -10,6 +22,12 @@ dependencies {
         exclude(module: 'groovy')
     }
     compile('org.apache.maven:maven-ant-tasks:2.1.3')
+
+    def kotlinVersion = "1.2.61"
+
+    compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 }
 
 compileGroovy {
