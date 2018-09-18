@@ -31,9 +31,8 @@ I've foreseen the following generic methods to compensate for this.
 I have not foreseen a generic method to handle other events. This is a priority for the next version.
 
 ### VirtualDOM
-UiRig uses [snabbdom](https://github.com/snabbdom/snabbdom) version 0.6.9 via a [snabbdom-kotlin](https://github.com/gbaldeck/snabbdom-kotlin) wrapper. The latest version is 0.7.2. 
+UiRig uses [snabbdom](https://github.com/snabbdom/snabbdom) version 0.7.2. 
 
-Ideally snabbdom would be wrapped by UiRig itself and updated to the latest version. This is not planned for the moment. I still need to get my head around how to do this in an easy fashion that allows for quickly synchronizing when new versions of snabbdom are released.
 
 ### HTTP request handling
 The HttpCommand is a very basic wrapper around the XMLHttpRequest.
