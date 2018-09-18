@@ -4,7 +4,7 @@ import com.jfrog.bintray.gradle.BintrayPlugin
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 
 buildscript {
-    val kotlinVersion = "1.2.21"
+    val kotlinVersion = "1.2.61"
 
     repositories {
         jcenter()
@@ -37,7 +37,7 @@ repositories {
 }
 
 dependencies {
-    val kotlinVersion = "1.2.21"
+    val kotlinVersion = "1.2.61"
 
     compile ("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion")
 }

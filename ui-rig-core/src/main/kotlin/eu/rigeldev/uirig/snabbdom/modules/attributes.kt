@@ -2,42 +2,17 @@
 
 package eu.rigeldev.uirig.snabbdom.modules
 
-external var attributesModule: Module = definedExternally
+import eu.rigeldev.uirig.snabbdom.Module
+import eu.rigeldev.uirig.snabbdom._get
+import eu.rigeldev.uirig.snabbdom._set
+
+@JsModule("snabbdom/modules/attributes")
+external val attributesModule_ext: dynamic = definedExternally
+val attributesModule: Module = attributesModule_ext.default
 
 external interface Attrs
 
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun Attrs.get(key: String): Any? = asDynamic()[key]
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun Attrs.set(key: String, value: Boolean) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun Attrs.set(key: String, value: String) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun Attrs.set(key: String, value: Number) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun Attrs.get(i: Number): Any? = asDynamic()[i]
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun Attrs.set(i: Number, value: Boolean) {
-    asDynamic()[i] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun Attrs.set(i: Number, value: String) {
-    asDynamic()[i] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun Attrs.set(i: Number, value: Number) {
-    asDynamic()[i] = value
-}
+operator fun Attrs.get(key: String): dynamic = this._get(key)
+operator fun Attrs.set(key: String, value: String) { this._set(key, value) }
+operator fun Attrs.set(key: String, value: Number) { this._set(key, value) }
+operator fun Attrs.set(key: String, value: Boolean) { this._set(key, value) }

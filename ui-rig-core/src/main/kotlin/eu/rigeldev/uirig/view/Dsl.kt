@@ -1,10 +1,11 @@
 package eu.rigeldev.uirig.view
 
 import eu.rigeldev.uirig.snabbdom.*
-import eu.rigeldev.uirig.snabbdom.modules.*
 import eu.rigeldev.uirig.core.UiAppControl
+import eu.rigeldev.uirig.snabbdom.modules.*
 import org.w3c.dom.HTMLInputElement
-import kotlin.reflect.KProperty
+import org.w3c.dom.Node
+import org.w3c.dom.events.Event
 
 /**
  * @author Tom Eyckmans <teyckmans@gmail.com>
@@ -33,6 +34,8 @@ abstract class DslTag(private val name: String,
         vNodeData.`class` = vNodeDataClasses().apply {
             addAll(cssClasses)
         }
+        vNodeData.props = vNodeDataProps()
+        vNodeData.hook = vNodeDataHooks()
 
         /*vnodeData.hero = assertSafeCast(Any())
         vnodeData.attachData = assertSafeCast(Any())
@@ -52,14 +55,15 @@ abstract class DslTag(private val name: String,
 //    @Suppress("UnsafeCastFromDynamic")
 //    fun vNodeData() : VNodeData = js("{}")
 
-    @Suppress("UnsafeCastFromDynamic")
     fun vNodeDataOn() : On = js("{}")
 
-    @Suppress("UnsafeCastFromDynamic")
     fun vNodeDataAttrs() : Attrs = js("{}")
 
-    @Suppress("UnsafeCastFromDynamic")
     fun vNodeDataClasses() : Classes = js("{}")
+
+    fun vNodeDataProps() : Props = js("{}")
+
+    fun vNodeDataHooks() : Hooks = js("{}")
 
     /*private val vNodeDataLookUp = { vnodeData }
 
@@ -99,7 +103,7 @@ abstract class DslTag(private val name: String,
 
     override fun render(): Any {
 
-        cssClasses.forEach({cssClass -> vNodeData.`class`!!.add(cssClass)})
+        cssClasses.forEach { cssClass -> vNodeData.`class`!!.add(cssClass)}
 
         // TODO attributes
         return h(name, vNodeData, children.map(DslElement::render).toTypedArray())
@@ -110,15 +114,6 @@ abstract class DslTag(private val name: String,
      */
     fun attr(name : String, value: String) {
         vNodeData.attrs!![name] = value
-    }
-}
-
-class DelegateProperty(val objectLookUp: () -> Any, val propertyName: String? = null){
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): dynamic =
-            objectLookUp()._get(propertyName ?: property.name)
-
-    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: dynamic) {
-        objectLookUp()._set(propertyName ?: property.name, value)
     }
 }
 
@@ -148,14 +143,6 @@ fun Classes.removeAll(vararg classes: String){
     remove(*classes)
 }
 
-operator fun Classes.plusAssign(className: String){
-    add(className)
-}
-
-operator fun Classes.minusAssign(className: String){
-    remove(className)
-}
-
 class DslTextElement(private val text : String) : DslElement {
 
     override fun prepare(appControl: UiAppControl) {
@@ -179,7 +166,7 @@ open class DslBodyTag(name : String, vararg cssClasses : String) : DslTagWithTex
     fun p(vararg cssClasses : String, init : DslParagraph.() -> Unit) = initTag(DslParagraph(*cssClasses), init)
     fun a(href : String, vararg cssClasses : String, init : DslAnchor.() -> Unit) = initTag(DslAnchor(href, *cssClasses), init)
     fun heading(level : Int, vararg cssClasses : String, init : DslHeading.() -> Unit) = initTag(DslHeading(level, *cssClasses), init)
-    fun form(vararg cssClasses : String, init : DslForm.() -> Unit) = initTag(DslForm(*cssClasses), init)
+    fun form(action : () -> Any, vararg cssClasses : String, init : DslForm.() -> Unit) = initTag(DslForm(action, *cssClasses), init)
     fun nav(vararg cssClasses: String, init : DslNav.() -> Unit) = initTag(DslNav(*cssClasses), init)
     fun footer(vararg cssClasses : String, init : DslFooter.() -> Unit) = initTag(DslFooter(*cssClasses), init)
     fun table(vararg cssClasses : String, init : DslTable.() -> Unit) = initTag(DslTable(*cssClasses), init)
@@ -246,13 +233,17 @@ class DslAnchorAction(val action : () -> Any, vararg cssClasses : String) : DslT
 
 
 
-class DslForm(vararg cssClasses : String) : DslBodyTag("form", *cssClasses) {
+class DslForm(val action : () -> Any, vararg cssClasses : String) : DslBodyTag("form", *cssClasses) {
 
     override fun prepare(appControl: UiAppControl) {
         super.prepare(appControl)
 
-        vNodeData.on!!.submit = { _ ->
-            console.log("form submit - oh oh...")
+        vNodeData.on!!.submit = { event : Event ->
+            appControl.send(action())
+
+            event.preventDefault()
+            event.stopImmediatePropagation()
+            event.stopPropagation()
         }
     }
 }
@@ -267,6 +258,8 @@ abstract class DslInputTag(val inputType : String, vararg cssClasses : String) :
 
 class DslTextField(val action : (value : String) -> Any, vararg cssClasses : String) : DslInputTag("text", "input", *cssClasses) {
 
+    private var emptyValueSet = false
+
     override fun prepare(appControl: UiAppControl) {
         super.prepare(appControl)
 
@@ -275,9 +268,22 @@ class DslTextField(val action : (value : String) -> Any, vararg cssClasses : Str
 
                 appControl.send(action(htmlInputElement.value))
             }
+
+
+
+        vNodeData.hook?.update = { oldVNode: VNode, _: VNode ->
+
+            if (emptyValueSet) {
+                val oldElement = oldVNode.elm as HTMLInputElement
+                oldElement.value = ""
+            }
+
+        }
     }
 
     fun value(value : String) {
+        this.emptyValueSet = value.isEmpty()
+
         super.attr("value", value)
     }
 
@@ -300,9 +306,10 @@ class DslTextField(val action : (value : String) -> Any, vararg cssClasses : Str
     fun optional() {
         required(false)
     }
-
 }
 class DslPasswordField(val action : (value : String) -> Any, vararg cssClasses : String) : DslInputTag("password", "input", *cssClasses) {
+
+    private var emptyValueSet = false
 
     override fun prepare(appControl: UiAppControl) {
         super.prepare(appControl)
@@ -312,9 +319,20 @@ class DslPasswordField(val action : (value : String) -> Any, vararg cssClasses :
 
             appControl.send(action(htmlInputElement.value))
         }
+
+        vNodeData.hook?.update = { oldVNode: VNode, _: VNode ->
+
+            if (emptyValueSet) {
+                val oldElement = oldVNode.elm as HTMLInputElement
+                oldElement.value = ""
+            }
+
+        }
     }
 
     fun value(value : String) {
+        this.emptyValueSet = value.isEmpty()
+
         super.attr("value", value)
     }
 

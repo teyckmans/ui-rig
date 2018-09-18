@@ -2,12 +2,20 @@
 
 package eu.rigeldev.uirig.snabbdom.modules
 
+import eu.rigeldev.uirig.snabbdom.Module
+import eu.rigeldev.uirig.snabbdom._get
+import eu.rigeldev.uirig.snabbdom._set
 import org.w3c.dom.DragEvent
 import org.w3c.dom.ErrorEvent
 import org.w3c.dom.events.*
 import org.w3c.xhr.ProgressEvent
 
-external var eventListenersModule: Module = definedExternally
+@JsModule("snabbdom/modules/eventlisteners")
+external val eventListenersModule_ext: dynamic = definedExternally
+val eventListenersModule: Module = eventListenersModule_ext.default
+
+operator fun On.get(key: String): (dynamic) -> Unit = this._get(key)
+operator fun On.set(key: String, value: (dynamic) -> Unit) { this._set(key, value) }
 
 external interface On {
     var abort: ((UIEvent) -> Unit)?

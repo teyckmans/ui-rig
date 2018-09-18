@@ -2,23 +2,20 @@
 
 package eu.rigeldev.uirig.snabbdom;
 
-external interface ThunkData : VNodeDataParent {
-    var fn: (() -> VNode)?
-    var args: Array<Any>?
-}
-external interface Thunk : VNodeParent {
-    var data: ThunkData?
-}
-external interface ThunkFn
+import org.w3c.dom.Node
 
-@Suppress("NOTHING_TO_INLINE", "UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-inline operator fun ThunkFn.invoke(sel: String, fn: Function<*>, args: Array<Any>): Thunk {
-    return asDynamic()(sel, fn, args) as Thunk
-}
+@JsModule("snabbdom/thunk")
+external val thunkModule: dynamic = definedExternally
 
-@Suppress("NOTHING_TO_INLINE", "UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-inline operator fun ThunkFn.invoke(sel: String, key: Any, fn: Function<*>, args: Array<Any>): Thunk {
-    return asDynamic()(sel, key, fn, args) as Thunk
+external interface ThunkData : VNodeData
+
+external interface Thunk : VNode
+
+fun thunk(sel: String, fn: ()->dynamic, args: Array<dynamic>): Thunk {
+    return thunkModule.default(sel, fn, args)
 }
 
-external var thunk: ThunkFn = definedExternally
+fun thunk(sel: String, key: dynamic, fn: ()->dynamic, args: Array<dynamic>): Thunk {
+    return thunkModule.default(sel, key, fn, args)
+}
+

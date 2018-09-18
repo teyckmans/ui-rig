@@ -4,4 +4,7 @@ package eu.rigeldev.uirig.snabbdom;
 
 import org.w3c.dom.Node
 
-external fun toVNode(node: Node, domApi: DOMAPI? = definedExternally /* null */): VNode = definedExternally
+@JsModule("snabbdom/tovnode")
+external val toVNodeModule: dynamic = definedExternally
+
+fun toVNode(node: Node, domApi: DOMAPI? = undefined /* null */): VNode = toVNodeModule.default(node, domApi)

@@ -2,8 +2,9 @@
 
 package eu.rigeldev.uirig.snabbdom;
 
-import eu.rigeldev.uirig.snabbdom.modules.Module
-
-external fun init(modules: Array<Module?>, domApi: DOMAPI? = definedExternally /* null */): Patch = definedExternally
+@JsModule("snabbdom")
+external object Snabbdom {
+    fun init(modules: Array<Module?>, domApi: DOMAPI? = definedExternally /* null */): Patch = definedExternally
+}
 
 typealias Patch = (oldVnode: dynamic /* Element | VNode */, vnode: VNode) -> VNode

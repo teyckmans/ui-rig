@@ -1,8 +1,8 @@
 package eu.rigeldev.uirig.core
 
 import eu.rigeldev.uirig.snabbdom.*
-import eu.rigeldev.uirig.snabbdom.modules.*
 import eu.rigeldev.uirig.UiRigApplication
+import eu.rigeldev.uirig.snabbdom.modules.*
 import eu.rigeldev.uirig.update.Update
 import kotlin.browser.document
 import kotlin.browser.window
@@ -13,7 +13,7 @@ import kotlin.browser.window
 class UiAppControl internal constructor(private val app: UiRigApplication) {
 
     private var state: Any? = null
-    private val patch: Patch = init(
+    private val patch: Patch = Snabbdom.init(
             arrayOf(
                     classModule,
                     attributesModule,
@@ -57,8 +57,8 @@ class UiAppControl internal constructor(private val app: UiRigApplication) {
         }
     }
 
-    private fun assertSafeCastToVNode(obj: Any): VNode {
-        @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
+    private fun assertSafeCastToVNode(obj: dynamic): VNode {
+        println(obj.sel)
         return obj as VNode
     }
 

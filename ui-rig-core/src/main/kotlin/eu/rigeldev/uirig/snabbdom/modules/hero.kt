@@ -2,7 +2,12 @@
 
 package eu.rigeldev.uirig.snabbdom.modules
 
+import eu.rigeldev.uirig.snabbdom.Module
+
+@JsModule("snabbdom/modules/hero")
+external val heroModule_ext: dynamic = definedExternally
+val heroModule: Module = heroModule_ext.default
+
 external interface Hero {
     var id: String
 }
-external var heroModule: Module = definedExternally

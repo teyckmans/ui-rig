@@ -2,7 +2,13 @@
 
 package eu.rigeldev.uirig.snabbdom.modules
 
-external var styleModule: Module = definedExternally
+import eu.rigeldev.uirig.snabbdom.Module
+import eu.rigeldev.uirig.snabbdom._get
+import eu.rigeldev.uirig.snabbdom._set
+
+@JsModule("snabbdom/modules/style")
+external val styleModule_ext: dynamic = definedExternally
+val styleModule : Module = styleModule_ext.default
 
 external interface VNodeStyle{
     var delayed: Delayed?
@@ -14,110 +20,11 @@ external interface VNodeStyle{
 
 }
 
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Remove.get(key: String): Any? = asDynamic()[key]
+operator fun VNodeStyle.get(key: String): String = this._get(key)
+operator fun VNodeStyle.set(key: String, value: String) = this._set(key, value)
 
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Remove.set(key: String, value: Boolean) {
-    asDynamic()[key] = value
-}
+operator fun VNodeStyle.Delayed.get(key: String): String = this._get(key)
+operator fun VNodeStyle.Delayed.set(key: String, value: String) = this._set(key, value)
 
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Remove.set(key: String, value: String) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Remove.set(key: String, value: Number) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Remove.get(i: Number): Any? = asDynamic()[i]
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Remove.set(i: Number, value: Boolean) {
-    asDynamic()[i] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Remove.set(i: Number, value: String) {
-    asDynamic()[i] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Remove.set(i: Number, value: Number) {
-    asDynamic()[i] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Delayed.get(key: String): Any? = asDynamic()[key]
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Delayed.set(key: String, value: Boolean) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Delayed.set(key: String, value: String) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Delayed.set(key: String, value: Number) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Delayed.get(i: Number): Any? = asDynamic()[i]
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Delayed.set(i: Number, value: Boolean) {
-    asDynamic()[i] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Delayed.set(i: Number, value: String) {
-    asDynamic()[i] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.Delayed.set(i: Number, value: Number) {
-    asDynamic()[i] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.get(key: String): Any? = asDynamic()[key]
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.set(key: String, value: Boolean) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.set(key: String, value: String) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.set(key: String, value: Number) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.get(i: Number): Any? = asDynamic()[i]
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.set(i: Number, value: Boolean) {
-    asDynamic()[i] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.set(i: Number, value: String) {
-    asDynamic()[i] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeStyle.set(i: Number, value: Number) {
-    asDynamic()[i] = value
-}
+operator fun VNodeStyle.Remove.get(key: String): String = this._get(key)
+operator fun VNodeStyle.Remove.set(key: String, value: String) = this._set(key, value)

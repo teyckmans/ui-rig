@@ -4,62 +4,57 @@ package eu.rigeldev.uirig.snabbdom
 
 import eu.rigeldev.uirig.snabbdom.helpers.AttachData
 import eu.rigeldev.uirig.snabbdom.modules.*
-import kotlin.js.*
-import kotlin.js.Json
-import org.khronos.webgl.*
-import org.w3c.dom.*
-import org.w3c.dom.events.*
-import org.w3c.dom.parsing.*
-import org.w3c.dom.svg.*
-import org.w3c.dom.url.*
-import org.w3c.fetch.*
-import org.w3c.files.*
-import org.w3c.notifications.*
-import org.w3c.performance.*
-import org.w3c.workers.*
-import org.w3c.xhr.*
+import org.w3c.dom.Element
+import org.w3c.dom.Node
+import org.w3c.dom.Text
 
-sealed external class VNodeParent {
+@JsModule("snabbdom/vnode")
+external val vNodeModule: dynamic = definedExternally
+
+external interface VNode {
     var sel: String?
     var children: Array<dynamic /* String | VNode */>?
     var elm: Node?
     var text: String?
     var key: dynamic /* String | Number */
+    var data: dynamic
 }
 
-external interface VNode : VNodeParent {
-    var data: VNodeData?
+external interface VNodeData {
+    var props: Props?
+    var attrs: Attrs?
+    var `class`: Classes?
+    var style: VNodeStyle?
+    var dataset: Dataset?
+    var on: On?
+    var hero: Hero?
+    var attachData: AttachData?
+    var hook: Hooks?
+    var key: dynamic /* String | Number */
+    var ns: String?
+    var fn: (() -> VNode)?
+    var args: Array<Any>?
 }
 
-sealed external class VNodeDataParent {
-    var props: Props? get() = definedExternally; set(value) = definedExternally
-    var attrs: Attrs? get() = definedExternally; set(value) = definedExternally
-    var `class`: Classes? get() = definedExternally; set(value) = definedExternally
-    var style: VNodeStyle? get() = definedExternally; set(value) = definedExternally
-    var dataset: Dataset? get() = definedExternally; set(value) = definedExternally
-    var on: On? get() = definedExternally; set(value) = definedExternally
-    var hero: Hero? get() = definedExternally; set(value) = definedExternally
-    var attachData: AttachData? get() = definedExternally; set(value) = definedExternally
-    var hook: Hooks? get() = definedExternally; set(value) = definedExternally
-    var key: dynamic /* String | Number */ get() = definedExternally; set(value) = definedExternally
-    var ns: String? get() = definedExternally; set(value) = definedExternally
+operator fun VNodeData.get(key: String): dynamic = this._get(key)
+operator fun VNodeData.set(key: String, value: dynamic) = this._set(key, value)
 
+fun vnode(sel: String?, data: Any?, children: Array<VNode>?,
+          text: String?, elm: Element?): VNode{
+    return vNodeModule.default(sel, data, children, text, elm)
 }
 
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeDataParent.get(key: String): Any? = asDynamic()[key]
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun VNodeDataParent.set(key: String, value: Any) {
-    asDynamic()[key] = value
+fun vnode(sel: String?, data: Any?, children: Array<String>?,
+          text: String?, elm: Element?): VNode{
+    return vNodeModule.default(sel, data, children, text, elm)
 }
 
-external interface VNodeData : VNodeDataParent {
-
-    var fn: (() -> VNode)? get() = definedExternally; set(value) = definedExternally
-    var args: Array<Any>? get() = definedExternally; set(value) = definedExternally
-
+fun vnode(sel: String?, data: Any?, children: Array<VNode>?,
+          text: String?, elm: Text?): VNode{
+    return vNodeModule.default(sel, data, children, text, elm)
 }
-external fun vnode(sel: String?, data: Any?, children: Array<dynamic /* String | VNode */>?, text: String?, elm: Element): VNode = definedExternally
-external fun vnode(sel: String?, data: Any?, children: Array<dynamic /* String | VNode */>?, text: String?, elm: Text): VNode = definedExternally
-external fun vnode(sel: String?, data: Any?, children: Array<dynamic /* String | VNode */>?, text: String?, elm: Nothing?): VNode = definedExternally
+
+fun vnode(sel: String?, data: Any?, children: Array<String>?,
+          text: String?, elm: Text?): VNode{
+    return vNodeModule.default(sel, data, children, text, elm)
+}

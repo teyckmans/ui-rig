@@ -1,6 +1,6 @@
 @file:Suppress("INTERFACE_WITH_SUPERCLASS", "OVERRIDING_FINAL_MEMBER", "RETURN_TYPE_MISMATCH_ON_OVERRIDE", "CONFLICTING_OVERLOADS", "EXTERNAL_DELEGATION", "NESTED_CLASS_IN_EXTERNAL_INTERFACE")
 
-package eu.rigeldev.uirig.snabbdom;
+package eu.rigeldev.uirig.snabbdom
 
 external interface Hooks {
     var pre: PreHook? get() = definedExternally; set(value) = definedExternally
@@ -15,13 +15,13 @@ external interface Hooks {
     var post: PostHook? get() = definedExternally; set(value) = definedExternally
 }
 
-typealias PreHook = (() -> Any) -> dynamic
-typealias InitHook = ((vNode: VNode) -> Any) -> dynamic
-typealias CreateHook = ((emptyVNode: VNode, vNode: VNode) -> Any) -> dynamic
-typealias InsertHook = ((vNode: VNode) -> Any) -> dynamic
-typealias PrePatchHook = ((oldVNode: VNode, vNode: VNode) -> Any) -> dynamic
-typealias UpdateHook = ((oldVNode: VNode, vNode: VNode) -> Any) -> dynamic
-typealias PostPatchHook = ((oldVNode: VNode, vNode: VNode) -> Any) -> dynamic
-typealias DestroyHook = ((vNode: VNode) -> Any) -> dynamic
-typealias RemoveHook = ((vNode: VNode, removeCallback: () -> Unit) -> Any) -> dynamic
-typealias PostHook = (() -> Any) -> dynamic
+typealias PreHook = ()  -> Any
+typealias InitHook = (vNode: VNode) -> Any
+typealias CreateHook = (emptyVNode: VNode, vNode: VNode) -> Any
+typealias InsertHook = (vNode: VNode) -> Any
+typealias PrePatchHook = (oldVNode: VNode, vNode: VNode)  -> Any
+typealias UpdateHook = (oldVNode: VNode, newVNode: VNode) -> Any
+typealias PostPatchHook = (oldVNode: VNode, vNode: VNode) -> Any
+typealias DestroyHook = (vNode: VNode) -> Any
+typealias RemoveHook = (vNode: VNode, removeCallback: () -> Unit) -> Any
+typealias PostHook = () -> Any

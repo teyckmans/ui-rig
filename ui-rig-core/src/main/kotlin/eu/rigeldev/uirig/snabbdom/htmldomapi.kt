@@ -4,6 +4,10 @@ package eu.rigeldev.uirig.snabbdom;
 
 import org.w3c.dom.*
 
+@JsModule("snabbdom/htmldomapi")
+external val htmlDomApiModule:dynamic = definedExternally
+val htmlDomApi: DOMAPI = htmlDomApiModule.default
+
 external interface DOMAPI {
     var createElement: (tagName: Any) -> HTMLElement
     var createElementNS: (namespaceURI: String, qualifiedName: String) -> Element
@@ -21,4 +25,3 @@ external interface DOMAPI {
     var isText: (node: Node) -> Boolean
     var isComment: (node: Node) -> Boolean
 }
-external var htmlDomApi: DOMAPI = definedExternally

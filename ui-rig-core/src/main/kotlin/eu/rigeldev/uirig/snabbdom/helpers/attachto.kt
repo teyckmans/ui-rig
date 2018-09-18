@@ -3,48 +3,23 @@
 package eu.rigeldev.uirig.snabbdom.helpers
 
 import eu.rigeldev.uirig.snabbdom.VNode
+import eu.rigeldev.uirig.snabbdom._get
+import eu.rigeldev.uirig.snabbdom._set
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 
+@JsModule("snabbdom/helpers/attachto")
+external val attachTo: dynamic = definedExternally
+
+fun attachTo(target: Element, vnode: VNode): VNode = attachTo.default(target, vnode)
+
 external interface AttachData {
-    var placeholder: Any? get() = definedExternally; set(value) = definedExternally
-    var real: Node? get() = definedExternally; set(value) = definedExternally
+    var placeholder: Any?
+    var real: Node?
+
 }
 
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun AttachData.get(key: String): Any? = asDynamic()[key]
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun AttachData.set(key: String, value: Boolean) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun AttachData.set(key: String, value: String) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun AttachData.set(key: String, value: Number) {
-    asDynamic()[key] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun AttachData.get(i: Number): Any? = asDynamic()[i]
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun AttachData.set(i: Number, value: Boolean) {
-    asDynamic()[i] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun AttachData.set(i: Number, value: String) {
-    asDynamic()[i] = value
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline operator fun AttachData.set(i: Number, value: Number) {
-    asDynamic()[i] = value
-}
-
-external fun attachTo(target: Element, vnode: VNode): VNode = definedExternally
+operator fun AttachData.get(key: String): dynamic = this._get(key)
+operator fun AttachData.set(key: String, value: dynamic) { this._set(key, value) }
+operator fun AttachData.get(key: Number): dynamic = this._get(key)
+operator fun AttachData.set(key: Number, value: dynamic) { this._set(key, value) }
