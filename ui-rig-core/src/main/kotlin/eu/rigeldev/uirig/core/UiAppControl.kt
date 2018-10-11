@@ -58,7 +58,6 @@ class UiAppControl internal constructor(private val app: UiRigApplication) {
     }
 
     private fun assertSafeCastToVNode(obj: dynamic): VNode {
-        println(obj.sel)
         return obj as VNode
     }
 

@@ -17,7 +17,7 @@ external interface Hooks {
 
 typealias PreHook = ()  -> Any
 typealias InitHook = (vNode: VNode) -> Any
-typealias CreateHook = (emptyVNode: VNode, vNode: VNode) -> Any
+typealias CreateHook = (oldVNode: VNode, vNode: VNode) -> Any
 typealias InsertHook = (vNode: VNode) -> Any
 typealias PrePatchHook = (oldVNode: VNode, vNode: VNode)  -> Any
 typealias UpdateHook = (oldVNode: VNode, newVNode: VNode) -> Any
