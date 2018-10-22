@@ -9,8 +9,8 @@ After 3 weeks of sporadic evening coding something emerged that was already work
 It had a [VirtualDOM](https://github.com/snabbdom/snabbdom) and command support for a REST call. 
 It even behaved in a stable fashion.
  
-## Example
-In the examples directory of this repository there is currently one example called demo.
+## Examples
+In the [examples repository](https://github.com/teyckmans/ui-rig-examples) there is currently one example called [demo](https://github.com/teyckmans/ui-rig-examples/tree/master/demo).
 The demo application shows how to use this library.
 
 ## State
