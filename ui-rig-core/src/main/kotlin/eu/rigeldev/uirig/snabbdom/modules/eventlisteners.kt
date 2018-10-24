@@ -65,8 +65,6 @@ external interface On {
     var mouseover: ((MouseEvent) -> Unit)?
     var mouseup: ((MouseEvent) -> Unit)?
     var mousewheel: ((WheelEvent) -> Unit)?
-    var MSContentZoom: ((UIEvent) -> Unit)?
-    var MSManipulationStateChanged: ((dynamic /* MSManipulationEvent */) -> Unit)?
     var paste: ((dynamic /* ClipboardEvent */) -> Unit)?
     var pause: ((Event) -> Unit)?
     var play: ((Event) -> Unit)?
@@ -89,6 +87,23 @@ external interface On {
     var command: ((Event) -> Unit)?
     var gotpointercapture: ((dynamic /* PointerEvent */) -> Unit)?
     var lostpointercapture: ((dynamic /* PointerEvent */) -> Unit)?
+    var touchcancel: ((dynamic /* TouchEvent */) -> Unit)?
+    var touchend: ((dynamic /* TouchEvent */) -> Unit)?
+    var touchmove: ((dynamic /* TouchEvent */) -> Unit)?
+    var touchstart: ((dynamic /* TouchEvent */) -> Unit)?
+    var webkitfullscreenchange: ((Event) -> Unit)?
+    var webkitfullscreenerror: ((Event) -> Unit)?
+    var pointercancel: ((dynamic /* PointerEvent */) -> Unit)?
+    var pointerdown: ((dynamic /* PointerEvent */) -> Unit)?
+    var pointerenter: ((dynamic /* PointerEvent */) -> Unit)?
+    var pointerleave: ((dynamic /* PointerEvent */) -> Unit)?
+    var pointermove: ((dynamic /* PointerEvent */) -> Unit)?
+    var pointerout: ((dynamic /* PointerEvent */) -> Unit)?
+    var pointerover: ((dynamic /* PointerEvent */) -> Unit)?
+    var pointerup: ((dynamic /* PointerEvent */) -> Unit)?
+    var wheel: ((WheelEvent) -> Unit)?
+    var MSManipulationStateChanged: ((dynamic /* MSManipulationEvent */) -> Unit)?
+    var MSContentZoom: ((UIEvent) -> Unit)?
     var MSGestureChange: ((dynamic /* MSGestureEvent */) -> Unit)?
     var MSGestureDoubleTap: ((dynamic /* MSGestureEvent */) -> Unit)?
     var MSGestureEnd: ((dynamic /* MSGestureEvent */) -> Unit)?
@@ -106,19 +121,4 @@ external interface On {
     var MSPointerOut: ((dynamic /* MSPointerEvent */) -> Unit)?
     var MSPointerOver: ((dynamic /* MSPointerEvent */) -> Unit)?
     var MSPointerUp: ((dynamic /* MSPointerEvent */) -> Unit)?
-    var touchcancel: ((dynamic /* TouchEvent */) -> Unit)?
-    var touchend: ((dynamic /* TouchEvent */) -> Unit)?
-    var touchmove: ((dynamic /* TouchEvent */) -> Unit)?
-    var touchstart: ((dynamic /* TouchEvent */) -> Unit)?
-    var webkitfullscreenchange: ((Event) -> Unit)?
-    var webkitfullscreenerror: ((Event) -> Unit)?
-    var pointercancel: ((dynamic /* PointerEvent */) -> Unit)?
-    var pointerdown: ((dynamic /* PointerEvent */) -> Unit)?
-    var pointerenter: ((dynamic /* PointerEvent */) -> Unit)?
-    var pointerleave: ((dynamic /* PointerEvent */) -> Unit)?
-    var pointermove: ((dynamic /* PointerEvent */) -> Unit)?
-    var pointerout: ((dynamic /* PointerEvent */) -> Unit)?
-    var pointerover: ((dynamic /* PointerEvent */) -> Unit)?
-    var pointerup: ((dynamic /* PointerEvent */) -> Unit)?
-    var wheel: ((WheelEvent) -> Unit)?
 }

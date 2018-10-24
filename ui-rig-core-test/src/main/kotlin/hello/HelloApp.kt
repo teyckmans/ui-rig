@@ -12,9 +12,9 @@ class HelloApp : UiRigApplication {
     }
 
     override fun update(message: Any, state: Any): Update {
+        println(message)
 
         if (state is HelloAppState) {
-            println(message)
             if (message is SetValueMessage) {
                 return Update(HelloAppState(message.value, state.valueList))
             } else {
@@ -48,6 +48,8 @@ class HelloApp : UiRigApplication {
                     }
                     button(::SubmitMessage, "btn", "btn-primary") {
                         text("Submit")
+                        on.focus = {event -> "got event of type: " + event.type + " for button" }
+                        on.blur = {event -> "got event of type: " + event.type + " for button" }
                     }
                 }
 
@@ -58,6 +60,9 @@ class HelloApp : UiRigApplication {
                         for (value in state.valueList) {
                             li {
                                 text(value)
+
+                                on.focus = {event -> "got event of type: " + event.type + " for " + value }
+                                on.blur = {event -> "got event of type: " + event.type + " for " + value }
                             }
                         }
                     }

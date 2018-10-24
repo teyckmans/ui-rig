@@ -1,11 +1,11 @@
 package hello
 
-import eu.rigeldev.uirig.UiRigLauncher
+import eu.rigeldev.uirig.UiRig
 import kotlin.test.Test
 
 class HelloAppTest {
     @Test
     fun testHelloApp() {
-        UiRigLauncher.uiRigApplication(HelloApp()).run()
+        UiRig.run(HelloApp())
     }
 }

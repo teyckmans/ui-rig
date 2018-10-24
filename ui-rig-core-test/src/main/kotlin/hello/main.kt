@@ -1,8 +1,8 @@
 package hello
 
-import eu.rigeldev.uirig.UiRigLauncher.Companion.uiRigApplication
+import eu.rigeldev.uirig.UiRig
 
 
 fun main(args: Array<String>) {
-    uiRigApplication(HelloApp()).run()
+    UiRig.run(HelloApp())
 }

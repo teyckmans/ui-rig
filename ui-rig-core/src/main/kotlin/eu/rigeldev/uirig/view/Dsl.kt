@@ -6,6 +6,7 @@ import eu.rigeldev.uirig.snabbdom.modules.*
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.Node
 import org.w3c.dom.events.Event
+import org.w3c.dom.events.UIEvent
 
 /**
  * @author Tom Eyckmans <teyckmans@gmail.com>
@@ -22,11 +23,11 @@ interface DslElement {
 @HtmlDslMarker
 abstract class DslTag(private val name: String,
                       private val cssClasses : List<String>) : DslElement {
+
     protected val children = arrayListOf<DslElement>()
     protected val attributes = hashMapOf<String, dynamic>()
-
-    @Suppress("UnsafeCastFromDynamic")
-    var vNodeData: VNodeData = js("{}")
+    protected var vNodeData: VNodeData = js("{}").unsafeCast<VNodeData>()
+    val on = DslOn()
 
     init {
         vNodeData.on = vNodeDataOn()
@@ -36,54 +37,17 @@ abstract class DslTag(private val name: String,
         }
         vNodeData.props = vNodeDataProps()
         vNodeData.hook = vNodeDataHooks()
-
-        /*vnodeData.hero = assertSafeCast(Any())
-        vnodeData.attachData = assertSafeCast(Any())
-        vnodeData.hook = assertSafeCast(Any())
-        vnodeData.ns = undefined
-        vnodeData.fn = undefined
-        vnodeData.args = arrayOf()
-        vnodeData.props = assertSafeCast(Any())
-        vnodeData.attrs = vNodeDataAttr()
-        vnodeData.`class` = assertSafeCast(Any())
-        vnodeData.style = assertSafeCast(Any())
-        vnodeData.dataset = assertSafeCast(Any())
-        vnodeData.on = vNodeDataOn()
-        vnodeData.key = undefined*/
     }
 
-//    @Suppress("UnsafeCastFromDynamic")
-//    fun vNodeData() : VNodeData = js("{}")
+    private fun vNodeDataOn() : On = js("{}").unsafeCast<On>()
 
-    fun vNodeDataOn() : On = js("{}")
+    private fun vNodeDataAttrs() : Attrs = js("{}").unsafeCast<Attrs>()
 
-    fun vNodeDataAttrs() : Attrs = js("{}")
+    private fun vNodeDataClasses() : Classes = js("{}").unsafeCast<Classes>()
 
-    fun vNodeDataClasses() : Classes = js("{}")
+    private fun vNodeDataProps() : Props = js("{}").unsafeCast<Props>()
 
-    fun vNodeDataProps() : Props = js("{}")
-
-    fun vNodeDataHooks() : Hooks = js("{}")
-
-    /*private val vNodeDataLookUp = { vnodeData }
-
-    val hero: Hero by DelegateProperty(vNodeDataLookUp)
-    val attachData: AttachData by DelegateProperty(vNodeDataLookUp)
-    val hook: Hooks by DelegateProperty(vNodeDataLookUp)
-    var ns: String? by DelegateProperty(vNodeDataLookUp)
-    var fn: (() -> VNode)? by DelegateProperty(vNodeDataLookUp)
-    val args: Array<dynamic> by DelegateProperty(vNodeDataLookUp)
-    val props: Props by DelegateProperty(vNodeDataLookUp)
-    val classes: Classes by DelegateProperty(vNodeDataLookUp, "class")
-    val styles: VNodeStyle by DelegateProperty(vNodeDataLookUp, "style")
-    val dataset: Dataset by DelegateProperty(vNodeDataLookUp)
-    val on: On by DelegateProperty(vNodeDataLookUp)
-    var key: dynamic by DelegateProperty(vNodeDataLookUp)*/
-
-    fun <T> assertSafeCast(obj: Any): T {
-        @Suppress("UNCHECKED_CAST")
-        return obj as T
-    }
+    private fun vNodeDataHooks() : Hooks = js("{}").unsafeCast<Hooks>()
 
     protected fun <IT : DslElement> initTag(tag: IT, init: IT.() -> Unit) : IT {
         tag.init()
@@ -96,16 +60,19 @@ abstract class DslTag(private val name: String,
         return tag
     }
 
+    protected fun prepareOn(appControl: UiAppControl) {
+        this.on.prepare(appControl, vNodeData.on)
+    }
+
     override fun prepare(appControl: UiAppControl) {
+        prepareOn(appControl)
         // only a few implementations need this - overwrite when needed.
         children.forEach { child -> child.prepare(appControl) }
     }
 
     override fun render(): Any {
-
         cssClasses.forEach { cssClass -> vNodeData.`class`!!.add(cssClass)}
 
-        // TODO attributes
         return h(name, vNodeData, children.map(DslElement::render).toTypedArray())
     }
 
