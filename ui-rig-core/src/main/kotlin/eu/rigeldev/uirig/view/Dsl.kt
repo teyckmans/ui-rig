@@ -60,7 +60,12 @@ abstract class DslTag(private val name: String,
         return tag
     }
 
+    protected open fun registerEventHandlers() {
+
+    }
+
     protected fun prepareOn(appControl: UiAppControl) {
+        this.registerEventHandlers()
         this.on.prepare(appControl, vNodeData.on)
     }
 
@@ -188,14 +193,11 @@ class DslAnchor(private val href: String, vararg cssClasses : String) : DslTagWi
 }
 
 class DslAnchorAction(val action : () -> Any, vararg cssClasses : String) : DslTagWithText("a", *cssClasses) {
-    override fun prepare(appControl: UiAppControl) {
-        super.prepare(appControl)
 
-        vNodeData.on!!.click = {
-            appControl.send(action())
-        }
-
+    override fun registerEventHandlers() {
+        on.click = { action.invoke() }
     }
+
 }
 
 
@@ -206,7 +208,7 @@ class DslForm(val action : () -> Any, vararg cssClasses : String) : DslBodyTag("
         super.prepare(appControl)
 
         vNodeData.on!!.submit = { event : Event ->
-            appControl.send(action())
+            appControl.send(action.invoke())
 
             event.preventDefault()
             event.stopImmediatePropagation()
@@ -227,16 +229,16 @@ class DslTextField(val action : (value : String) -> Any, vararg cssClasses : Str
 
     private var emptyValueSet = false
 
+    override fun registerEventHandlers() {
+        on.input = { event ->
+            val htmlInputElement = event.target as HTMLInputElement
+
+            action.invoke(htmlInputElement.value)
+        }
+    }
+
     override fun prepare(appControl: UiAppControl) {
         super.prepare(appControl)
-
-        vNodeData.on!!.input = { event ->
-                val htmlInputElement = event.target as HTMLInputElement
-
-                appControl.send(action(htmlInputElement.value))
-            }
-
-
 
         vNodeData.hook?.update = { oldVNode: VNode, _: VNode ->
 
@@ -278,14 +280,16 @@ class DslPasswordField(val action : (value : String) -> Any, vararg cssClasses :
 
     private var emptyValueSet = false
 
-    override fun prepare(appControl: UiAppControl) {
-        super.prepare(appControl)
-
-        vNodeData.on!!.input = { event ->
+    override fun registerEventHandlers() {
+        on.input = { event ->
             val htmlInputElement = event.target as HTMLInputElement
 
-            appControl.send(action(htmlInputElement.value))
+            action.invoke(htmlInputElement.value)
         }
+    }
+
+    override fun prepare(appControl: UiAppControl) {
+        super.prepare(appControl)
 
         vNodeData.hook?.update = { oldVNode: VNode, _: VNode ->
 
@@ -326,15 +330,14 @@ class DslPasswordField(val action : (value : String) -> Any, vararg cssClasses :
 
 class DslButton(val action : () -> Any, vararg cssClasses : String) : DslTagWithText("button", *cssClasses) {
 
+    override fun registerEventHandlers() {
+        on.click = { action() }
+    }
+
     override fun prepare(appControl: UiAppControl) {
         super.prepare(appControl)
 
         super.attr("type", "button")
-
-        vNodeData.on!!.click = {
-            appControl.send(action())
-        }
-
     }
 }
 

@@ -15,21 +15,39 @@ class HelloApp : UiRigApplication {
         println(message)
 
         if (state is HelloAppState) {
-            if (message is SetValueMessage) {
-                return Update(HelloAppState(message.value, state.valueList))
-            } else {
-                val newValueList = ArrayList<String>()
-
-                newValueList.addAll(state.valueList)
-                if (state.value.isNotEmpty()) {
-                    newValueList.add(state.value)
-                }
-
-                return Update(HelloAppState("", newValueList))
+            when (message) {
+                is SetValueMessage -> return Update(HelloAppState(message.value, state.valueList))
+                is SubmitMessage -> return this.doSubmit(state)
+                is FormSubmitMessage -> return this.doSubmit(state)
+                is ValueMouseOverMessage ->
+                    return Update(HelloAppState(
+                            state.value,
+                            state.valueList,
+                            message.value
+                    ))
+                is ValueMouseOutMessage ->
+                    return Update(HelloAppState(
+                            state.value,
+                            state.valueList,
+                            ""
+                    ))
+                else ->
+                    return Update(state)
             }
         } else {
             return Update(state)
         }
+    }
+
+    private fun doSubmit(state: HelloAppState): Update {
+        val newValueList = ArrayList<String>()
+
+        newValueList.addAll(state.valueList)
+        if (state.value.isNotEmpty()) {
+            newValueList.add(state.value)
+        }
+
+        return Update(HelloAppState("", newValueList))
     }
 
     override fun view(state: Any, control: UiAppControl): DslElement {
@@ -58,15 +76,25 @@ class HelloApp : UiRigApplication {
                 } else {
                     ul {
                         for (value in state.valueList) {
-                            li {
+
+
+                            val cssClasses = ArrayList<String>()
+
+                            if (state.hoverValue == value) {
+                                cssClasses.add("li-hover")
+                            }
+
+                            li (*cssClasses.toTypedArray()){
                                 text(value)
 
-                                on.focus = {event -> "got event of type: " + event.type + " for " + value }
-                                on.blur = {event -> "got event of type: " + event.type + " for " + value }
+                                on.mouseOver = { ValueMouseOverMessage(value) }
+                                on.mouseOut = { ValueMouseOutMessage(value) }
                             }
                         }
                     }
                 }
+
+                on.mouseMove = { event -> "got mouse move ${event.offsetX}:${event.offsetY}"}
 
             }
         } else {
