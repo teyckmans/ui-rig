@@ -25,10 +25,10 @@ I've foreseen the following generic methods to compensate for this.
 * `DslTag.attr(name : String, value: String)`
 
 ### Event Handler support
-* There is only support 'oninput' for text and password fields.
-* There is only support 'onclick' for buttons and links. 
+All event handlers are available that snabbdom provides check [DslOn](https://github.com/teyckmans/ui-rig/blob/master/ui-rig-core/src/main/kotlin/eu/rigeldev/uirig/view/DslOn.kt) for details. 
+You can find a usage example [here](https://github.com/teyckmans/ui-rig/blob/master/ui-rig-core-test/src/main/kotlin/hello/HelloApp.kt)
 
-I have not foreseen a generic method to handle other events. This is a priority for the next version.
+The event handler methods are factory methods for messages that can alter the state.
 
 ### VirtualDOM
 UiRig uses [snabbdom](https://github.com/snabbdom/snabbdom) version 0.7.2. 
